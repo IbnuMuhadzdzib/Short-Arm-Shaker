@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from 'react'
 import { useSocket } from './hooks/useSocket'
 import { JoinScreen } from './components/JoinScreen'
 import { GameScene } from './scene/GameScene'
+import { ScorePanel } from './components/ScorePanel'
 import { useGameSounds } from './hooks/useDiceSounds'
 
 const MAX_HAND_OFFSET_X = 60
@@ -10,8 +11,17 @@ const RELEASE_THRESHOLD = 0.65
 const GAMBLE_THRESHOLD_MS = 5000
 
 function App() {
-  const { gameState, isConnected, joinRoom, rollDice, toggleHold, gambleResult, clearGambleResult } =
-    useSocket()
+  const {
+    gameState,
+    isConnected,
+    myPlayerId,
+    joinRoom,
+    rollDice,
+    toggleHold,
+    claimScore,
+    gambleResult,
+    clearGambleResult,
+  } = useSocket()
   const { startShaking, stopShaking, updateTension, playGambleResult } = useGameSounds()
 
   const [isShaking, setIsShaking] = useState(false)
@@ -105,27 +115,17 @@ function App() {
         </div>
       )}
 
-      <div className="w-72 p-4 bg-base-200 flex flex-col gap-4 overflow-y-auto">
-        <h2 className="text-xl font-bold">Room: {gameState.roomId}</h2>
-        <div className="badge badge-outline">Sisa roll: {gameState.rollsLeftInTurn}</div>
+      {/* ── Score Panel (left sidebar) ── */}
+      <ScorePanel
+        players={gameState.players}
+        dice={gameState.dice}
+        myPlayerId={myPlayerId}
+        rollsLeftInTurn={gameState.rollsLeftInTurn}
+        currentTurn={gameState.currentTurn}
+        onClaimScore={claimScore}
+      />
 
-        <p className="text-xs text-center opacity-70">
-          {isShaking
-            ? 'tahan & geser, lepas mouse di atas papan buat lempar'
-            : 'tekan & tahan tangan dino di bawah, lepas di atas papan'}
-        </p>
-
-        <ul className="menu bg-base-100 rounded-box">
-          {gameState.players.map((player) => (
-            <li key={player.id}>
-              <span className={player.isCurrentTurn ? 'font-bold text-primary' : ''}>
-                {player.name} {player.isCurrentTurn ? '(giliran)' : ''}
-              </span>
-            </li>
-          ))}
-        </ul>
-      </div>
-
+      {/* ── 3D Game Scene ── */}
       <div ref={sceneContainerRef} className="flex-1 relative overflow-hidden">
         <GameScene
           dice={gameState.dice}
@@ -140,9 +140,8 @@ function App() {
           style={{
             transform: `translateX(calc(-50% + ${handDrag.x}px)) translateY(${-handDrag.lift}px)`
           }}
-          className={`absolute -bottom-5 left-1/2 text-8xl select-none z-10 ${
-            gameState.rollsLeftInTurn <= 0 || isRolling ? 'opacity-40' : 'cursor-pointer'
-          }`}
+          className={`absolute -bottom-5 left-1/2 text-8xl select-none z-10 ${gameState.rollsLeftInTurn <= 0 || isRolling ? 'opacity-40' : 'cursor-pointer'
+            }`}
         >
           {isShaking ? '✊' : '🖐️'}
         </div>

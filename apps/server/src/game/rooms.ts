@@ -16,6 +16,7 @@ export function createRoom(roomId: string): GameState {
       isHeld: false
     })),
     rollsLeftInTurn: 3,
+    currentTurn: 1,
     status: 'waiting'
   }
   rooms.set(roomId, newState)

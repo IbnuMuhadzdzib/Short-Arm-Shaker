@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from 'react'
 import { io, Socket } from 'socket.io-client'
-import type { ClientToServerEvents, ServerToClientEvents, GameState } from '@yahtzee/shared'
+import type { ClientToServerEvents, ServerToClientEvents, GameState, ScoreCategory } from '@yahtzee/shared'
 
 const SERVER_URL = 'http://localhost:17510'
 
@@ -8,14 +8,16 @@ export function useSocket() {
   const socketRef = useRef<Socket<ServerToClientEvents, ClientToServerEvents>>()
   const [gameState, setGameState] = useState<GameState | null>(null)
   const [isConnected, setIsConnected] = useState(false)
-    const [gambleResult, setGambleResult] = useState<'good' | 'bad' | null>(null)
+  const [myPlayerId, setMyPlayerId] = useState<string>('')
+  const [gambleResult, setGambleResult] = useState<'good' | 'bad' | null>(null)
 
-    useEffect(() => {
+  useEffect(() => {
     const socket: Socket<ServerToClientEvents, ClientToServerEvents> = io(SERVER_URL)
     socketRef.current = socket
 
     socket.on('connect', () => {
       setIsConnected(true)
+      setMyPlayerId(socket.id ?? '')
     })
 
     socket.on('disconnect', () => {
@@ -26,7 +28,7 @@ export function useSocket() {
       setGameState(state)
     })
 
-        socket.on('gambleResult', (result) => {
+    socket.on('gambleResult', (result) => {
       setGambleResult(result)
     })
 
@@ -35,19 +37,33 @@ export function useSocket() {
     }
   }, [])
 
-    const joinRoom = (roomId: string, playerName: string) => {
+  const joinRoom = (roomId: string, playerName: string) => {
     socketRef.current?.emit('joinRoom', roomId, playerName)
   }
 
-    const toggleHold = (diceId: string) => {
+  const toggleHold = (diceId: string) => {
     socketRef.current?.emit('toggleHold', diceId)
   }
 
-    const rollDice = (holdDurationMs: number) => {
+  const rollDice = (holdDurationMs: number) => {
     socketRef.current?.emit('rollDice', holdDurationMs)
   }
 
-    const clearGambleResult = () => setGambleResult(null)
+  const claimScore = (category: ScoreCategory) => {
+    socketRef.current?.emit('claimScore', category)
+  }
 
-  return { gameState, isConnected, joinRoom, rollDice, toggleHold, gambleResult, clearGambleResult }
+  const clearGambleResult = () => setGambleResult(null)
+
+  return {
+    gameState,
+    isConnected,
+    myPlayerId,
+    joinRoom,
+    rollDice,
+    toggleHold,
+    claimScore,
+    gambleResult,
+    clearGambleResult,
+  }
 }

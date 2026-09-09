@@ -25,19 +25,8 @@ export interface GameState {
   players: Player[]
   dice: Dice[]
   rollsLeftInTurn: number
+  currentTurn: number
   status: 'waiting' | 'playing' | 'finished'
-}
-
-export interface ServerToClientEvents {
-  gameStateUpdate: (state: GameState) => void
-  playerJoined: (player: Player) => void
-  errorMessage: (message: string) => void
-}
-
-export interface ClientToServerEvents {
-  joinRoom: (roomId: string, playerName: string) => void
-  rollDice: (holdDurationMs: number) => void
-  toggleHold: (diceId: string) => void
 }
 
 export interface ServerToClientEvents {
@@ -47,4 +36,9 @@ export interface ServerToClientEvents {
   gambleResult: (result: 'good' | 'bad') => void
 }
 
-
+export interface ClientToServerEvents {
+  joinRoom: (roomId: string, playerName: string) => void
+  rollDice: (holdDurationMs: number) => void
+  toggleHold: (diceId: string) => void
+  claimScore: (category: ScoreCategory) => void
+}
