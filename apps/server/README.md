@@ -1,4 +1,4 @@
-# yahtzee-game
+# server
 
 To install dependencies:
 

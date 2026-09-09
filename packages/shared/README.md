@@ -1,4 +1,4 @@
-# yahtzee-game
+# shared
 
 To install dependencies:
 
