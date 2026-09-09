@@ -1,13 +1,4 @@
-.game-screen {
-  display: flex;
-  height: 100vh;
-}
-
-.hud {
-  width: 250px;
-  padding: 1rem;
-}
-
-.scene-container {
-  flex: 1;
+@import "tailwindcss";
+@plugin "daisyui" {
+  themes: dark, light;
 }
