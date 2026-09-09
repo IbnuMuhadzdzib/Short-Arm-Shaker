@@ -8,6 +8,7 @@ export function useSocket() {
   const socketRef = useRef<Socket<ServerToClientEvents, ClientToServerEvents>>()
   const [gameState, setGameState] = useState<GameState | null>(null)
   const [isConnected, setIsConnected] = useState(false)
+    const [gambleResult, setGambleResult] = useState<'good' | 'bad' | null>(null)
 
     useEffect(() => {
     const socket: Socket<ServerToClientEvents, ClientToServerEvents> = io(SERVER_URL)
@@ -25,6 +26,10 @@ export function useSocket() {
       setGameState(state)
     })
 
+        socket.on('gambleResult', (result) => {
+      setGambleResult(result)
+    })
+
     return () => {
       socket.disconnect()
     }
@@ -34,9 +39,15 @@ export function useSocket() {
     socketRef.current?.emit('joinRoom', roomId, playerName)
   }
 
-  const rollDice = () => {
-    socketRef.current?.emit('rollDice')
+    const toggleHold = (diceId: string) => {
+    socketRef.current?.emit('toggleHold', diceId)
   }
 
-  return { gameState, isConnected, joinRoom, rollDice }
+    const rollDice = (holdDurationMs: number) => {
+    socketRef.current?.emit('rollDice', holdDurationMs)
+  }
+
+    const clearGambleResult = () => setGambleResult(null)
+
+  return { gameState, isConnected, joinRoom, rollDice, toggleHold, gambleResult, clearGambleResult }
 }

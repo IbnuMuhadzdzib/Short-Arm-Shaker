@@ -36,7 +36,7 @@ io.on('connection', (socket) => {
     io.to(roomId).emit('gameStateUpdate', state)
   })
 
-  socket.on('rollDice', () => {
+    socket.on('rollDice', (holdDurationMs) => {
     const roomId = Array.from(socket.rooms)[1]
     if (!roomId) return
 
@@ -44,14 +44,19 @@ io.on('connection', (socket) => {
     if (!state) return
 
     if (state.rollsLeftInTurn <= 0) {
-      socket.emit('errorMessage', 'Tidak ada kesempatan roll tersisa')
+      socket.emit('errorMessage', 'tidak ada kesempatan roll tersisa')
       return
     }
 
-    state.dice = rollDice(state.dice)
+    const result = rollDice(state.dice, holdDurationMs)
+    state.dice = result.dice
     state.rollsLeftInTurn -= 1
 
     io.to(roomId).emit('gameStateUpdate', state)
+
+    if (result.gambleResult !== 'none') {
+      io.to(roomId).emit('gambleResult', result.gambleResult)
+    }
   })
 })
 

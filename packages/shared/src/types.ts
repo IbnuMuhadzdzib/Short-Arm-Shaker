@@ -36,6 +36,15 @@ export interface ServerToClientEvents {
 
 export interface ClientToServerEvents {
   joinRoom: (roomId: string, playerName: string) => void
-  rollDice: () => void
+  rollDice: (holdDurationMs: number) => void
   toggleHold: (diceId: string) => void
 }
+
+export interface ServerToClientEvents {
+  gameStateUpdate: (state: GameState) => void
+  playerJoined: (player: Player) => void
+  errorMessage: (message: string) => void
+  gambleResult: (result: 'good' | 'bad') => void
+}
+
+

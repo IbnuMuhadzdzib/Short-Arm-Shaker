@@ -7,9 +7,12 @@ import type { Dice } from '@yahtzee/shared'
 interface GameSceneProps {
   dice: Dice[]
   isRolling: boolean
+  isShaking: boolean
+  onDiceClick: (diceId: string) => void
+  handOffset: { x: number; progress: number }
 }
 
-export function GameScene({ dice, isRolling }: GameSceneProps) {
+export function GameScene({ dice, isRolling, isShaking, onDiceClick, handOffset }: GameSceneProps) {
   return (
     <Canvas camera={{ position: [0, 8, 6], fov: 50 }}>
   <ambientLight intensity={0.5} />
@@ -41,10 +44,16 @@ export function GameScene({ dice, isRolling }: GameSceneProps) {
     />
   </Environment>
 
-  <Physics gravity={[0, -20, 0]}>
-    <DiceGroup dice={dice} isRolling={isRolling} />
-    <Table />
-  </Physics>
+ <Physics gravity={[0, -20, 0]}>
+        <DiceGroup
+          dice={dice}
+          isRolling={isRolling}
+          isShaking={isShaking}
+          onDiceClick={onDiceClick}
+          handOffset={handOffset}
+        />
+        <Table />
+      </Physics>
 
   <OrbitControls enablePan={false} maxPolarAngle={Math.PI / 2.2} />
 </Canvas>
