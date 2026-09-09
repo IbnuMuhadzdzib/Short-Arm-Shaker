@@ -1,5 +1,5 @@
 /* ============================================================
-   WaitingRoom — Dark gambling den waiting screen
+   WaitingRoom — DaisyUI theme-aware
    ============================================================ */
 
 .waiting-root {
@@ -9,21 +9,39 @@
     justify-content: center;
     width: 100%;
     height: 100vh;
-    background: #06070c;
+    background: var(--color-base-200);
     overflow: hidden;
 }
 
-/* Ambient glow blob */
-.waiting-bg-glow {
+/* Diagonal strips */
+.waiting-root::before {
+    content: '';
     position: absolute;
-    width: 500px;
-    height: 500px;
-    background: radial-gradient(ellipse at center, rgba(240, 192, 60, 0.07) 0%, transparent 70%);
+    inset: 0;
+    background:
+        linear-gradient(135deg,
+            var(--color-primary) 0%,
+            var(--color-primary) 28%,
+            var(--color-base-200) 28%,
+            var(--color-base-200) 58%,
+            var(--color-secondary) 58%,
+            var(--color-secondary) 100%);
+    opacity: 0.55;
+    z-index: 0;
+}
+
+/* Glow circle */
+.waiting-root::after {
+    content: '';
+    position: absolute;
+    width: 600px;
+    height: 600px;
     border-radius: 50%;
+    background: radial-gradient(circle, color-mix(in oklch, var(--color-accent) 30%, transparent) 0%, transparent 70%);
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    pointer-events: none;
+    z-index: 1;
     animation: glow-pulse 3s ease-in-out infinite;
 }
 
@@ -31,37 +49,35 @@
 
     0%,
     100% {
-        opacity: 0.6;
         transform: translate(-50%, -50%) scale(1);
+        opacity: 0.7;
     }
 
     50% {
+        transform: translate(-50%, -50%) scale(1.2);
         opacity: 1;
-        transform: translate(-50%, -50%) scale(1.15);
     }
 }
 
 /* Card */
 .waiting-card {
     position: relative;
-    z-index: 1;
+    z-index: 2;
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 18px;
-    background: #0d0e17;
-    border: 1px solid #1e2035;
-    border-radius: 20px;
+    background: var(--color-neutral);
+    border-radius: 22px;
     padding: 44px 52px;
     min-width: 380px;
     box-shadow:
-        0 0 60px rgba(0, 0, 0, 0.8),
-        0 0 0 1px rgba(240, 192, 96, 0.04) inset;
+        8px 8px 0px var(--color-primary),
+        16px 16px 0px rgba(0, 0, 0, 0.12);
 }
 
-/* Emoji icon */
 .waiting-icon {
-    font-size: 52px;
+    font-size: 56px;
     line-height: 1;
     animation: dice-bounce 1.8s ease-in-out infinite;
 }
@@ -74,57 +90,55 @@
     }
 
     30% {
-        transform: translateY(-10px) rotate(-8deg);
+        transform: translateY(-12px) rotate(-10deg);
     }
 
     60% {
-        transform: translateY(-4px) rotate(6deg);
+        transform: translateY(-5px) rotate(8deg);
     }
 }
 
-/* Title */
 .waiting-title {
-    font-size: 20px;
-    font-weight: 800;
-    color: #c8cde8;
+    font-size: 22px;
+    font-weight: 900;
+    color: var(--color-neutral-content);
     letter-spacing: 0.04em;
+    text-transform: uppercase;
     margin: 0;
+    text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.15);
 }
 
-/* Room ID badge */
+/* Room ID */
 .waiting-room-id {
     display: flex;
     align-items: center;
     gap: 10px;
-    background: #131628;
-    border: 1px solid #1e2540;
-    border-radius: 10px;
+    background: rgba(0, 0, 0, 0.2);
+    border: 2px solid rgba(255, 255, 255, 0.12);
+    border-radius: 12px;
     padding: 8px 20px;
 }
 
 .room-label {
     font-size: 10px;
-    font-weight: 700;
+    font-weight: 800;
     letter-spacing: 0.18em;
-    color: #3a4060;
+    color: color-mix(in oklch, var(--color-neutral-content) 50%, transparent);
     text-transform: uppercase;
 }
 
 .room-value {
-    font-size: 18px;
-    font-weight: 800;
-    color: #f0c060;
+    font-size: 20px;
+    font-weight: 900;
+    color: var(--color-primary-content);
     letter-spacing: 0.08em;
-    text-shadow: 0 0 12px rgba(240, 192, 96, 0.4);
 }
 
-/* Subtitle */
 .waiting-sub {
     font-size: 12px;
-    color: #3a4060;
+    color: color-mix(in oklch, var(--color-neutral-content) 55%, transparent);
     text-align: center;
-    line-height: 1.5;
-    max-width: 260px;
+    max-width: 240px;
 }
 
 /* Player slots */
@@ -139,27 +153,25 @@
     display: flex;
     align-items: center;
     gap: 12px;
-    padding: 10px 14px;
-    border-radius: 10px;
-    border: 1px solid #1e2035;
-    background: #0a0b13;
+    padding: 11px 14px;
+    border-radius: 12px;
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    background: rgba(0, 0, 0, 0.15);
     transition: border-color 0.2s;
 }
 
 .player-slot.filled {
-    border-color: #1e3040;
+    border-color: color-mix(in oklch, var(--color-primary-content) 70%, transparent);
 }
 
 .slot-icon {
     font-size: 18px;
-    line-height: 1;
     width: 24px;
     text-align: center;
 }
 
 .empty-icon {
-    color: #2a2f50;
-    font-style: normal;
+    color: rgba(255, 255, 255, 0.2);
     font-weight: 700;
     font-size: 16px;
 }
@@ -167,51 +179,55 @@
 .slot-name {
     flex: 1;
     font-size: 13px;
-    font-weight: 600;
-    color: #c8cde8;
+    font-weight: 700;
+    color: var(--color-neutral-content);
 }
 
 .empty-name {
-    color: #2a2f50;
+    color: rgba(255, 255, 255, 0.25);
     font-style: italic;
     font-weight: 400;
 }
 
 .slot-you {
-    color: #4a70aa;
+    font-size: 10px;
+    color: var(--color-secondary-content);
     font-weight: 400;
-    font-size: 11px;
     margin-left: 4px;
 }
 
 .slot-ready {
-    font-size: 14px;
-    color: #50c090;
-    text-shadow: 0 0 8px rgba(80, 192, 144, 0.5);
+    font-size: 16px;
+    color: var(--color-success);
 }
 
 /* Loading dots */
 .waiting-spinner {
     display: flex;
-    gap: 6px;
+    gap: 7px;
     margin-top: 4px;
 }
 
 .waiting-spinner span {
     display: block;
-    width: 6px;
-    height: 6px;
+    width: 8px;
+    height: 8px;
     border-radius: 50%;
-    background: #f0c060;
-    opacity: 0.3;
     animation: dot-blink 1.2s ease-in-out infinite;
 }
 
+.waiting-spinner span:nth-child(1) {
+    background: var(--color-primary-content);
+    animation-delay: 0s;
+}
+
 .waiting-spinner span:nth-child(2) {
+    background: var(--color-accent);
     animation-delay: 0.2s;
 }
 
 .waiting-spinner span:nth-child(3) {
+    background: var(--color-secondary-content);
     animation-delay: 0.4s;
 }
 
@@ -220,11 +236,11 @@
     0%,
     100% {
         opacity: 0.2;
-        transform: scale(0.8);
+        transform: scale(0.7);
     }
 
     50% {
         opacity: 1;
-        transform: scale(1.2);
+        transform: scale(1.3);
     }
 }

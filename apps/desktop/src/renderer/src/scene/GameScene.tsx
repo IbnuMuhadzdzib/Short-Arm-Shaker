@@ -93,8 +93,8 @@ function GamblingTable() {
         <mesh receiveShadow position={[0, -1, 0]}>
           <boxGeometry args={[tableW, 2, tableD]} />
           <meshStandardMaterial
-            color="#0c4a20"
-            roughness={0.95}
+            color="#1B5C38"
+            roughness={0.9}
             metalness={0}
           />
         </mesh>

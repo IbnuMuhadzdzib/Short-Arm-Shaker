@@ -4,6 +4,7 @@ import { JoinScreen } from './components/JoinScreen'
 import { GameScene } from './scene/GameScene'
 import { ScorePanel } from './components/ScorePanel'
 import { WaitingRoom } from './components/WaitingRoom'
+import { ThemeSwitcher } from './components/ThemeSwitcher'
 import { useGameSounds } from './hooks/useDiceSounds'
 
 const MAX_HAND_OFFSET_X = 60
@@ -90,21 +91,34 @@ function App() {
   }
 
   if (!isConnected) {
-    return <div className="status">Menghubungkan ke server...</div>
+    return (
+      <>
+        <ThemeSwitcher />
+        <div className="status">Menghubungkan ke server...</div>
+      </>
+    )
   }
 
   if (!gameState) {
-    return <JoinScreen onJoin={joinRoom} />
+    return (
+      <>
+        <ThemeSwitcher />
+        <JoinScreen onJoin={joinRoom} />
+      </>
+    )
   }
 
   // Waiting room — not enough players yet
   if (gameState.status === 'waiting') {
     return (
-      <WaitingRoom
-        roomId={gameState.roomId}
-        players={gameState.players}
-        myPlayerId={myPlayerId}
-      />
+      <>
+        <ThemeSwitcher />
+        <WaitingRoom
+          roomId={gameState.roomId}
+          players={gameState.players}
+          myPlayerId={myPlayerId}
+        />
+      </>
     )
   }
 
@@ -114,7 +128,7 @@ function App() {
   }
 
   return (
-    <div className="flex h-screen bg-base-300 relative">
+    <div className="flex h-screen relative" style={{ background: 'var(--color-base-300, var(--fun-dkgreen, #1B5C38))' }}>
       {gambleResult && (
         <div className="toast toast-top toast-center z-50">
           <div className={`alert ${gambleResult === 'good' ? 'alert-success' : 'alert-error'}`}>

@@ -1,5 +1,5 @@
 /* ============================================================
-   ScorePanel — Dark Gambling Den Theme
+   ScorePanel — DaisyUI theme-aware
    ============================================================ */
 
 .score-panel {
@@ -7,11 +7,11 @@
   min-width: 300px;
   display: flex;
   flex-direction: column;
-  background: #0d0e17;
-  border-right: 1px solid #1e2035;
+  background: var(--color-primary);
+  border-right: 3px solid var(--color-primary-content);
   overflow-y: auto;
   font-family: 'Segoe UI', system-ui, sans-serif;
-  color: #c8cde8;
+  color: var(--color-primary-content);
   font-size: 12px;
   user-select: none;
 }
@@ -22,29 +22,32 @@
   align-items: baseline;
   gap: 8px;
   padding: 14px 16px 10px;
-  border-bottom: 1px solid #1e2035;
-  background: #0a0b13;
+  border-bottom: 2px solid rgba(0, 0, 0, 0.15);
+  background: var(--color-neutral);
 }
 
 .turn-label {
   font-size: 10px;
-  font-weight: 700;
+  font-weight: 800;
   letter-spacing: 0.15em;
-  color: #4a5080;
+  color: var(--color-neutral-content);
+  opacity: 0.55;
   text-transform: uppercase;
 }
 
 .turn-count {
-  font-size: 22px;
-  font-weight: 800;
-  color: #f0c060;
+  font-size: 24px;
+  font-weight: 900;
+  color: var(--color-secondary-content);
   line-height: 1;
+  text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.2);
 }
 
 .turn-total {
   font-size: 13px;
   font-weight: 400;
-  color: #4a5080;
+  color: var(--color-neutral-content);
+  opacity: 0.4;
 }
 
 /* ── Table ── */
@@ -57,7 +60,7 @@
 .score-table th,
 .score-table td {
   padding: 4px 8px;
-  border-bottom: 1px solid #14162a;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   text-align: center;
   vertical-align: middle;
 }
@@ -70,16 +73,16 @@
 
 .player-col {
   position: relative;
-  color: #5a6090;
+  color: color-mix(in oklch, var(--color-primary-content) 50%, transparent);
   font-size: 11px;
-  font-weight: 600;
+  font-weight: 700;
   letter-spacing: 0.04em;
   padding: 6px 4px !important;
   transition: color 0.2s;
 }
 
 .player-col.active-player {
-  color: #f0c060;
+  color: var(--color-secondary-content);
 }
 
 .player-name {
@@ -93,21 +96,30 @@
 
 .turn-dot {
   display: inline-block;
-  width: 5px;
-  height: 5px;
+  width: 6px;
+  height: 6px;
   border-radius: 50%;
-  background: #f0c060;
+  background: var(--color-secondary-content);
   position: absolute;
   bottom: 4px;
   left: 50%;
   transform: translateX(-50%);
-  box-shadow: 0 0 6px #f0c060;
-  animation: pulse-dot 1.4s ease-in-out infinite;
+  box-shadow: 0 0 8px var(--color-secondary-content);
+  animation: pulse-dot 1.2s ease-in-out infinite;
 }
 
 @keyframes pulse-dot {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.35; }
+
+  0%,
+  100% {
+    opacity: 1;
+    transform: translateX(-50%) scale(1);
+  }
+
+  50% {
+    opacity: 0.3;
+    transform: translateX(-50%) scale(0.6);
+  }
 }
 
 /* ── Section dividers ── */
@@ -119,26 +131,26 @@
 .section-label {
   text-align: left !important;
   font-size: 9px;
-  font-weight: 700;
-  letter-spacing: 0.18em;
-  color: #2a2f50;
+  font-weight: 800;
+  letter-spacing: 0.2em;
+  color: var(--color-primary-content);
   text-transform: uppercase;
-  background: #0a0b13;
+  background: rgba(0, 0, 0, 0.12);
   padding-top: 8px !important;
 }
 
 /* ── Score rows ── */
 .score-row {
-  transition: background 0.12s;
+  transition: background 0.1s;
 }
 
 .score-row.row-hover {
-  background: #131628;
+  background: rgba(0, 0, 0, 0.1);
 }
 
 .category-name {
   text-align: left !important;
-  color: #8890b8;
+  color: color-mix(in oklch, var(--color-primary-content) 80%, transparent);
   font-size: 11.5px;
   padding-left: 10px !important;
   white-space: nowrap;
@@ -147,12 +159,12 @@
 .dice-hint {
   margin-right: 4px;
   font-size: 13px;
-  opacity: 0.7;
+  opacity: 0.8;
 }
 
 .fixed-pts {
   font-size: 9px;
-  color: #3a4060;
+  color: color-mix(in oklch, var(--color-primary-content) 35%, transparent);
   margin-left: 2px;
 }
 
@@ -161,15 +173,16 @@
   min-width: 52px;
   height: 26px;
   font-size: 12px;
-  font-weight: 600;
-  color: #c8cde8;
+  font-weight: 700;
+  color: var(--color-primary-content);
   position: relative;
   cursor: default;
-  transition: background 0.12s;
+  transition: background 0.1s;
 }
 
 .score-cell.claimed .score-value {
-  color: #f0c060;
+  color: var(--color-secondary-content);
+  font-weight: 900;
 }
 
 .score-cell.claimable {
@@ -177,31 +190,30 @@
 }
 
 .score-cell.claimable:hover {
-  background: #1e2840;
+  background: color-mix(in oklch, var(--color-accent) 25%, transparent);
 }
 
 .score-cell.hovered {
-  background: #1a2d40;
+  background: color-mix(in oklch, var(--color-accent) 30%, transparent);
 }
 
 .score-preview {
-  color: #4ab8a0;
+  color: var(--color-success);
   font-style: italic;
   font-size: 11px;
-  opacity: 0.9;
-  text-shadow: 0 0 8px rgba(74, 184, 160, 0.6);
+  text-shadow: 0 0 8px color-mix(in oklch, var(--color-success) 60%, transparent);
 }
 
 /* ── Sum / Bonus rows ── */
 .sum-row td,
 .bonus-row td {
-  background: #0a0c1a;
+  background: rgba(0, 0, 0, 0.12);
   font-size: 11px;
 }
 
 .sum-row .category-name,
 .bonus-row .category-name {
-  color: #3a4060;
+  color: color-mix(in oklch, var(--color-primary-content) 45%, transparent);
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 0.04em;
@@ -212,66 +224,73 @@
 }
 
 .sum-target {
-  color: #3a4060;
+  color: color-mix(in oklch, var(--color-primary-content) 30%, transparent);
   font-size: 10px;
   margin-left: 1px;
 }
 
 .bonus-reached {
-  color: #50e0a0;
-  text-shadow: 0 0 8px rgba(80, 224, 160, 0.5);
+  color: var(--color-success);
+  text-shadow: 0 0 8px color-mix(in oklch, var(--color-success) 50%, transparent);
 }
 
 .bonus-earned {
-  color: #f0c060 !important;
-  text-shadow: 0 0 10px rgba(240, 192, 96, 0.5);
+  background: var(--color-accent) !important;
+  color: var(--color-accent-content) !important;
+  font-weight: 900 !important;
 }
 
 /* ── Total row ── */
 .total-row {
-  background: #0a0b13;
-  border-top: 2px solid #1e2035 !important;
+  background: var(--color-neutral);
+  border-top: 3px solid rgba(0, 0, 0, 0.15) !important;
 }
 
 .total-row td {
   border-bottom: none !important;
-  padding: 8px 8px !important;
+  padding: 10px 8px !important;
 }
 
 .total-label {
   font-size: 10px !important;
-  font-weight: 800 !important;
-  letter-spacing: 0.12em;
-  color: #4a5080 !important;
+  font-weight: 900 !important;
+  letter-spacing: 0.14em;
+  color: var(--color-neutral-content) !important;
+  opacity: 0.55;
   text-transform: uppercase;
 }
 
 .total-cell {
-  font-size: 18px !important;
-  font-weight: 800;
-  color: #f0c060 !important;
-  text-shadow: 0 0 14px rgba(240, 192, 96, 0.4);
+  font-size: 20px !important;
+  font-weight: 900;
+  color: var(--color-secondary-content) !important;
+  text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.2);
 }
 
 /* ── Footer hint ── */
 .panel-hint {
   padding: 10px 12px;
   font-size: 10px;
-  color: #2e3560;
+  color: color-mix(in oklch, var(--color-primary-content) 45%, transparent);
   text-align: center;
-  border-top: 1px solid #1e2035;
-  line-height: 1.4;
-  background: #0a0b13;
+  border-top: 2px solid rgba(0, 0, 0, 0.12);
+  line-height: 1.5;
+  background: rgba(0, 0, 0, 0.12);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
 }
 
 /* ── Scrollbar ── */
 .score-panel::-webkit-scrollbar {
   width: 4px;
 }
+
 .score-panel::-webkit-scrollbar-track {
-  background: #0a0b13;
+  background: rgba(0, 0, 0, 0.1);
 }
+
 .score-panel::-webkit-scrollbar-thumb {
-  background: #1e2035;
+  background: var(--color-primary-content);
   border-radius: 2px;
+  opacity: 0.4;
 }
