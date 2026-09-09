@@ -3,6 +3,7 @@ import { useFrame } from '@react-three/fiber'
 import { RigidBody, RapierRigidBody } from '@react-three/rapier'
 import * as THREE from 'three'
 import type { DiceValue } from '@yahtzee/shared'
+import { useDiceImpactSound } from '../hooks/useDiceSounds'
 
 interface SingleDiceProps {
   value: DiceValue
@@ -33,10 +34,20 @@ export function SingleDice({
   handOffset
 }: SingleDiceProps) {
   const rigidBodyRef = useRef<RapierRigidBody>(null)
+  const { playImpact } = useDiceImpactSound()
+  const prevLinvel = useRef({ x: 0, y: 0, z: 0 })
 
   useFrame(() => {
     const body = rigidBodyRef.current
-    if (!body || !isShaking || isHeld) return
+    if (!body) return
+
+    // Track velocity for impact detection fallback
+    if (!isShaking && !isHeld) {
+      const vel = body.linvel()
+      prevLinvel.current = { x: vel.x, y: vel.y, z: vel.z }
+    }
+
+    if (!isShaking || isHeld) return
 
     const t = Date.now() * 0.01
     const jitter = new THREE.Euler(
@@ -114,12 +125,29 @@ export function SingleDice({
       position={startPosition}
       type={bodyType}
       colliders="cuboid"
-      restitution={0.4}
-      friction={0.5}
+      restitution={0.3}
+      friction={0.7}
+      ccd={true}
+      onCollisionEnter={() => {
+        const body = rigidBodyRef.current
+        if (!body) return
+        // Use current velocity magnitude as impact proxy —
+        // more reliable than manifold.maxImpulse() which may not exist
+        const vel = prevLinvel.current
+        const speed = Math.sqrt(vel.x * vel.x + vel.y * vel.y + vel.z * vel.z)
+        const intensity = Math.min(1, speed / 8)
+        if (intensity > 0.08) {
+          playImpact(intensity)
+        }
+      }}
     >
       <mesh castShadow onClick={onClick}>
         <boxGeometry args={[1, 1, 1]} />
-        <meshStandardMaterial color={isHeld ? '#f4d35e' : '#f0f0f0'} />
+        <meshStandardMaterial
+          color={isHeld ? '#f4d35e' : '#f5f0e8'}
+          roughness={0.2}
+          metalness={0.1}
+        />
       </mesh>
     </RigidBody>
   )

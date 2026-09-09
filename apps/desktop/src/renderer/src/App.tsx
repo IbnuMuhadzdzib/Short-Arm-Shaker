@@ -2,20 +2,24 @@ import { useState, useRef, useEffect } from 'react'
 import { useSocket } from './hooks/useSocket'
 import { JoinScreen } from './components/JoinScreen'
 import { GameScene } from './scene/GameScene'
+import { useGameSounds } from './hooks/useDiceSounds'
+
+const MAX_HAND_OFFSET_X = 60
+const MAX_HAND_OFFSET_Y = 280
+const RELEASE_THRESHOLD = 0.65
+const GAMBLE_THRESHOLD_MS = 5000
 
 function App() {
   const { gameState, isConnected, joinRoom, rollDice, toggleHold, gambleResult, clearGambleResult } =
     useSocket()
+  const { startShaking, stopShaking, updateTension, playGambleResult } = useGameSounds()
 
   const [isShaking, setIsShaking] = useState(false)
   const [isRolling, setIsRolling] = useState(false)
+  const [handDrag, setHandDrag] = useState({ x: 0, lift: 0 })
   const sceneContainerRef = useRef<HTMLDivElement>(null)
   const holdStartRef = useRef(0)
-      const [handDrag, setHandDrag] = useState({ x: 0, lift: 0 })
   const dragStartRef = useRef({ x: 0, y: 0 })
-  const MAX_HAND_OFFSET_X = 60
-const MAX_HAND_OFFSET_Y = 280
-const RELEASE_THRESHOLD = 0.65
 
   useEffect(() => {
     if (!isShaking) return
@@ -28,10 +32,14 @@ const RELEASE_THRESHOLD = 0.65
       const clampedLift = Math.max(0, Math.min(MAX_HAND_OFFSET_Y, rawLift))
 
       setHandDrag({ x: clampedX, lift: clampedLift })
+
+      const holdElapsed = Date.now() - holdStartRef.current
+      updateTension(holdElapsed / GAMBLE_THRESHOLD_MS)
     }
 
     const handleMouseUp = (e: MouseEvent) => {
       setIsShaking(false)
+      stopShaking()
 
       const rawLift = dragStartRef.current.y - e.clientY
       const clampedLift = Math.max(0, Math.min(MAX_HAND_OFFSET_Y, rawLift))
@@ -55,11 +63,19 @@ const RELEASE_THRESHOLD = 0.65
     }
   }, [isShaking])
 
-      const handleHandMouseDown = (e: React.MouseEvent) => {
+  useEffect(() => {
+    if (!gambleResult) return
+    playGambleResult(gambleResult)
+    const timeout = setTimeout(() => clearGambleResult(), 3000)
+    return () => clearTimeout(timeout)
+  }, [gambleResult])
+
+  const handleHandMouseDown = (e: React.MouseEvent) => {
     if (!gameState || isRolling || gameState.rollsLeftInTurn <= 0) return
     setIsShaking(true)
     holdStartRef.current = Date.now()
     dragStartRef.current = { x: e.clientX, y: e.clientY }
+    startShaking()
   }
 
   if (!isConnected) {
@@ -75,7 +91,7 @@ const RELEASE_THRESHOLD = 0.65
     progress: handDrag.lift / MAX_HAND_OFFSET_Y
   }
 
-    return (
+  return (
     <div className="flex h-screen bg-base-300 relative">
       {gambleResult && (
         <div className="toast toast-top toast-center z-50">
@@ -119,7 +135,7 @@ const RELEASE_THRESHOLD = 0.65
           handOffset={worldHandOffset}
         />
 
-                <div
+        <div
           onMouseDown={handleHandMouseDown}
           style={{
             transform: `translateX(calc(-50% + ${handDrag.x}px)) translateY(${-handDrag.lift}px)`
