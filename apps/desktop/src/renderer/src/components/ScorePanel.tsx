@@ -87,13 +87,28 @@ export function ScorePanel({
 
     return (
         <div className="score-panel">
-            {/* Turn header */}
+            {/* Turn header with roll count */}
             <div className="turn-header">
-                <span className="turn-label">TURN</span>
-                <span className="turn-count">
-                    {Math.min(currentTurn, TOTAL_TURNS)}
-                    <span className="turn-total"> / {TOTAL_TURNS}</span>
-                </span>
+                <div className="turn-info">
+                    <span className="turn-label">TURN</span>
+                    <span className="turn-count">
+                        {Math.min(currentTurn, TOTAL_TURNS)}
+                        <span className="turn-total"> / {TOTAL_TURNS}</span>
+                    </span>
+                </div>
+
+                <div className="rolls-remaining">
+                    <span className="rolls-label">ROLL</span>
+                    <div className="roll-dots">
+                        {[1, 2, 3].map((n) => (
+                            <span
+                                key={n}
+                                className={`roll-dot ${n <= rollsLeftInTurn ? 'dot-active' : 'dot-used'}`}
+                            />
+                        ))}
+                    </div>
+                    <span className="rolls-count">{rollsLeftInTurn}x</span>
+                </div>
             </div>
 
             <table className="score-table">

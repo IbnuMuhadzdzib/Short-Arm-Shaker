@@ -3,8 +3,8 @@
    ============================================================ */
 
 .score-panel {
-  width: 300px;
-  min-width: 300px;
+  width: 360px;
+  min-width: 360px;
   display: flex;
   flex-direction: column;
   background: var(--color-primary);
@@ -12,18 +12,24 @@
   overflow-y: auto;
   font-family: 'Segoe UI', system-ui, sans-serif;
   color: var(--color-primary-content);
-  font-size: 12px;
+  font-size: 15px;
   user-select: none;
 }
 
 /* ── Turn header ── */
 .turn-header {
   display: flex;
-  align-items: baseline;
-  gap: 8px;
-  padding: 14px 16px 10px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 14px 10px;
   border-bottom: 2px solid rgba(0, 0, 0, 0.15);
   background: var(--color-neutral);
+}
+
+.turn-info {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
 }
 
 .turn-label {
@@ -36,7 +42,7 @@
 }
 
 .turn-count {
-  font-size: 24px;
+  font-size: 28px;
   font-weight: 900;
   color: var(--color-secondary-content);
   line-height: 1;
@@ -44,10 +50,57 @@
 }
 
 .turn-total {
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 400;
   color: var(--color-neutral-content);
   opacity: 0.4;
+}
+
+/* Roll count */
+.rolls-remaining {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+}
+
+.rolls-label {
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: 0.15em;
+  color: var(--color-neutral-content);
+  opacity: 0.45;
+  text-transform: uppercase;
+}
+
+.roll-dots {
+  display: flex;
+  gap: 4px;
+}
+
+.roll-dot {
+  display: block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  transition: background 0.25s, box-shadow 0.25s;
+}
+
+.dot-active {
+  background: var(--color-secondary-content);
+  box-shadow: 0 0 6px var(--color-secondary-content);
+}
+
+.dot-used {
+  background: rgba(255, 255, 255, 0.12);
+  box-shadow: none;
+}
+
+.rolls-count {
+  font-size: 9px;
+  font-weight: 700;
+  color: var(--color-secondary-content);
+  opacity: 0.8;
 }
 
 /* ── Table ── */
@@ -130,7 +183,7 @@
 
 .section-label {
   text-align: left !important;
-  font-size: 9px;
+  font-size: 11px;
   font-weight: 800;
   letter-spacing: 0.2em;
   color: var(--color-primary-content);
@@ -151,7 +204,7 @@
 .category-name {
   text-align: left !important;
   color: color-mix(in oklch, var(--color-primary-content) 80%, transparent);
-  font-size: 11.5px;
+  font-size: 13.5px;
   padding-left: 10px !important;
   white-space: nowrap;
 }
@@ -170,9 +223,9 @@
 
 /* ── Score cells ── */
 .score-cell {
-  min-width: 52px;
-  height: 26px;
-  font-size: 12px;
+  min-width: 65px;
+  height: 32px;
+  font-size: 15px;
   font-weight: 700;
   color: var(--color-primary-content);
   position: relative;
@@ -261,7 +314,7 @@
 }
 
 .total-cell {
-  font-size: 20px !important;
+  font-size: 26px !important;
   font-weight: 900;
   color: var(--color-secondary-content) !important;
   text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.2);
