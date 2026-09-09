@@ -1,0 +1,230 @@
+/* ============================================================
+   WaitingRoom — Dark gambling den waiting screen
+   ============================================================ */
+
+.waiting-root {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100vh;
+    background: #06070c;
+    overflow: hidden;
+}
+
+/* Ambient glow blob */
+.waiting-bg-glow {
+    position: absolute;
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(ellipse at center, rgba(240, 192, 60, 0.07) 0%, transparent 70%);
+    border-radius: 50%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    animation: glow-pulse 3s ease-in-out infinite;
+}
+
+@keyframes glow-pulse {
+
+    0%,
+    100% {
+        opacity: 0.6;
+        transform: translate(-50%, -50%) scale(1);
+    }
+
+    50% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1.15);
+    }
+}
+
+/* Card */
+.waiting-card {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 18px;
+    background: #0d0e17;
+    border: 1px solid #1e2035;
+    border-radius: 20px;
+    padding: 44px 52px;
+    min-width: 380px;
+    box-shadow:
+        0 0 60px rgba(0, 0, 0, 0.8),
+        0 0 0 1px rgba(240, 192, 96, 0.04) inset;
+}
+
+/* Emoji icon */
+.waiting-icon {
+    font-size: 52px;
+    line-height: 1;
+    animation: dice-bounce 1.8s ease-in-out infinite;
+}
+
+@keyframes dice-bounce {
+
+    0%,
+    100% {
+        transform: translateY(0) rotate(0deg);
+    }
+
+    30% {
+        transform: translateY(-10px) rotate(-8deg);
+    }
+
+    60% {
+        transform: translateY(-4px) rotate(6deg);
+    }
+}
+
+/* Title */
+.waiting-title {
+    font-size: 20px;
+    font-weight: 800;
+    color: #c8cde8;
+    letter-spacing: 0.04em;
+    margin: 0;
+}
+
+/* Room ID badge */
+.waiting-room-id {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #131628;
+    border: 1px solid #1e2540;
+    border-radius: 10px;
+    padding: 8px 20px;
+}
+
+.room-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    color: #3a4060;
+    text-transform: uppercase;
+}
+
+.room-value {
+    font-size: 18px;
+    font-weight: 800;
+    color: #f0c060;
+    letter-spacing: 0.08em;
+    text-shadow: 0 0 12px rgba(240, 192, 96, 0.4);
+}
+
+/* Subtitle */
+.waiting-sub {
+    font-size: 12px;
+    color: #3a4060;
+    text-align: center;
+    line-height: 1.5;
+    max-width: 260px;
+}
+
+/* Player slots */
+.waiting-slots {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+}
+
+.player-slot {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    border-radius: 10px;
+    border: 1px solid #1e2035;
+    background: #0a0b13;
+    transition: border-color 0.2s;
+}
+
+.player-slot.filled {
+    border-color: #1e3040;
+}
+
+.slot-icon {
+    font-size: 18px;
+    line-height: 1;
+    width: 24px;
+    text-align: center;
+}
+
+.empty-icon {
+    color: #2a2f50;
+    font-style: normal;
+    font-weight: 700;
+    font-size: 16px;
+}
+
+.slot-name {
+    flex: 1;
+    font-size: 13px;
+    font-weight: 600;
+    color: #c8cde8;
+}
+
+.empty-name {
+    color: #2a2f50;
+    font-style: italic;
+    font-weight: 400;
+}
+
+.slot-you {
+    color: #4a70aa;
+    font-weight: 400;
+    font-size: 11px;
+    margin-left: 4px;
+}
+
+.slot-ready {
+    font-size: 14px;
+    color: #50c090;
+    text-shadow: 0 0 8px rgba(80, 192, 144, 0.5);
+}
+
+/* Loading dots */
+.waiting-spinner {
+    display: flex;
+    gap: 6px;
+    margin-top: 4px;
+}
+
+.waiting-spinner span {
+    display: block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #f0c060;
+    opacity: 0.3;
+    animation: dot-blink 1.2s ease-in-out infinite;
+}
+
+.waiting-spinner span:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.waiting-spinner span:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+@keyframes dot-blink {
+
+    0%,
+    100% {
+        opacity: 0.2;
+        transform: scale(0.8);
+    }
+
+    50% {
+        opacity: 1;
+        transform: scale(1.2);
+    }
+}

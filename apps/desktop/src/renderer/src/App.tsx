@@ -3,6 +3,7 @@ import { useSocket } from './hooks/useSocket'
 import { JoinScreen } from './components/JoinScreen'
 import { GameScene } from './scene/GameScene'
 import { ScorePanel } from './components/ScorePanel'
+import { WaitingRoom } from './components/WaitingRoom'
 import { useGameSounds } from './hooks/useDiceSounds'
 
 const MAX_HAND_OFFSET_X = 60
@@ -94,6 +95,17 @@ function App() {
 
   if (!gameState) {
     return <JoinScreen onJoin={joinRoom} />
+  }
+
+  // Waiting room — not enough players yet
+  if (gameState.status === 'waiting') {
+    return (
+      <WaitingRoom
+        roomId={gameState.roomId}
+        players={gameState.players}
+        myPlayerId={myPlayerId}
+      />
+    )
   }
 
   const worldHandOffset = {

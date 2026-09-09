@@ -15,6 +15,8 @@ const io = new Server<ClientToServerEvents, ServerToClientEvents>(httpServer, {
 
 const PORT = 17510
 const TOTAL_TURNS = 13
+const IS_DEBUG = true   // dev: allow solo play without waiting for second player
+const MIN_PLAYERS = IS_DEBUG ? 1 : 2
 
 io.on('connection', (socket) => {
   console.log(`Client connected: ${socket.id}`)
@@ -23,6 +25,12 @@ io.on('connection', (socket) => {
     let state = getRoom(roomId)
     if (!state) {
       state = createRoom(roomId)
+    }
+
+    // Reject if room is already playing or finished
+    if (state.status !== 'waiting') {
+      socket.emit('errorMessage', 'Room sudah dimulai, tidak bisa bergabung.')
+      return
     }
 
     const newPlayer = {
@@ -34,6 +42,12 @@ io.on('connection', (socket) => {
 
     state.players.push(newPlayer)
     socket.join(roomId)
+
+    // Start game once enough players have joined
+    if (state.players.length >= MIN_PLAYERS) {
+      state.status = 'playing'
+      console.log(`Room ${roomId} started with ${state.players.length} player(s) [debug=${IS_DEBUG}]`)
+    }
 
     io.to(roomId).emit('gameStateUpdate', state)
   })
