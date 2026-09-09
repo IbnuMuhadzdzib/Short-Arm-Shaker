@@ -25,24 +25,32 @@ function App() {
     return <JoinScreen onJoin={joinRoom} />
   }
 
-  return (
-    <div className="game-screen">
-      <div className="hud">
-        <h2>Room: {gameState.roomId}</h2>
-        <p>Sisa roll: {gameState.rollsLeftInTurn}</p>
-        <button onClick={handleRoll} disabled={isRolling || gameState.rollsLeftInTurn <= 0}>
+    return (
+    <div className="flex h-screen bg-base-300">
+      <div className="w-72 p-4 bg-base-200 flex flex-col gap-4 overflow-y-auto">
+        <h2 className="text-xl font-bold">Room: {gameState.roomId}</h2>
+        <div className="badge badge-outline">Sisa roll: {gameState.rollsLeftInTurn}</div>
+
+        <button
+          onClick={handleRoll}
+          disabled={isRolling || gameState.rollsLeftInTurn <= 0}
+          className="btn btn-primary"
+        >
           {isRolling ? 'Rolling...' : 'Roll Dice'}
         </button>
-        <ul>
+
+        <ul className="menu bg-base-100 rounded-box">
           {gameState.players.map((player) => (
             <li key={player.id}>
-              {player.name} {player.isCurrentTurn ? '(giliran)' : ''}
+              <span className={player.isCurrentTurn ? 'font-bold text-primary' : ''}>
+                {player.name} {player.isCurrentTurn ? '(giliran)' : ''}
+              </span>
             </li>
           ))}
         </ul>
       </div>
 
-      <div className="scene-container">
+      <div className="flex-1">
         <GameScene dice={gameState.dice} isRolling={isRolling} />
       </div>
     </div>

@@ -14,24 +14,44 @@ export function JoinScreen({ onJoin }: JoinScreenProps) {
     onJoin(roomId.trim(), playerName.trim())
   }
 
-    return (
-    <div className="join-screen">
-      <h1>Yahtzee</h1>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          placeholder="Nama kamu"
-          value={playerName}
-          onChange={(e) => setPlayerName(e.target.value)}
-        />
-        <input
-          type="text"
-          placeholder="Room ID"
-          value={roomId}
-          onChange={(e) => setRoomId(e.target.value)}
-        />
-        <button type="submit">Join Game</button>
-      </form>
+      return (
+    <div className="hero min-h-screen bg-base-200">
+      <div className="hero-content flex-col">
+        <h1 className="text-5xl font-bold">🎲 Yahtzee</h1>
+        <div className="card w-full max-w-sm shrink-0 bg-base-100 shadow-2xl">
+          <form onSubmit={handleSubmit} className="card-body">
+            <div className="form-control">
+              <label className="label">
+                <span className="label-text">Nama kamu</span>
+              </label>
+              <input
+                type="text"
+                placeholder="Masukkan nama"
+                className="input input-bordered"
+                value={playerName}
+                onChange={(e) => setPlayerName(e.target.value)}
+              />
+            </div>
+            <div className="form-control">
+              <label className="label">
+                <span className="label-text">Room ID</span>
+              </label>
+              <input
+                type="text"
+                placeholder="Masukkan room ID"
+                className="input input-bordered"
+                value={roomId}
+                onChange={(e) => setRoomId(e.target.value)}
+              />
+            </div>
+            <div className="form-control mt-6">
+              <button type="submit" className="btn btn-primary">
+                Join Game
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
     </div>
   )
 }
