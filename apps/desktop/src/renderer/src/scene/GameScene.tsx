@@ -80,7 +80,7 @@ function DiceTray() {
   const trayW = 9
   const trayD = 8
   const visualWallH = 0.55  // lowered visual rim height so it doesn't block the view
-  const physWallH = 5.0     // tall invisible physics wall to prevent dice escaping
+  const physWallH = 20.0    // massive invisible physics wall to prevent dice escaping
   const wallT = 0.5         // wall thickness
   const feltY = 0
   const baseH = 1.8
@@ -118,6 +118,13 @@ function DiceTray() {
       <RigidBody type="fixed" colliders="cuboid">
         <mesh visible={false} position={[trayW / 2 + wallT / 2, physWallH / 2, 0]}>
           <boxGeometry args={[wallT, physWallH, trayD]} />
+        </mesh>
+      </RigidBody>
+
+      {/* ── INVISIBLE PHYSICS CEILING (prevents hyper-bounces from escaping upward) ── */}
+      <RigidBody type="fixed" colliders="cuboid">
+        <mesh visible={false} position={[0, 12, 0]}>
+          <boxGeometry args={[trayW + wallT * 2, 0.5, trayD + wallT * 2]} />
         </mesh>
       </RigidBody>
 

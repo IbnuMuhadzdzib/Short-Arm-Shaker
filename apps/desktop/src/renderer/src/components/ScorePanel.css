@@ -253,8 +253,20 @@
 .score-preview {
   color: var(--color-success);
   font-style: italic;
-  font-size: 11px;
-  text-shadow: 0 0 8px color-mix(in oklch, var(--color-success) 60%, transparent);
+  transition: all 0.15s;
+}
+
+.preview-dim {
+  opacity: 0.35;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.preview-active {
+  opacity: 1;
+  font-size: 15px;
+  font-weight: 900;
+  text-shadow: 0 0 10px color-mix(in oklch, var(--color-success) 60%, transparent);
 }
 
 /* ── Sum / Bonus rows ── */

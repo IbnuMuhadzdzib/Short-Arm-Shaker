@@ -78,8 +78,10 @@ export function ScorePanel({
                 onMouseLeave={() => setHoveredCategory(null)}
                 onClick={() => isMe && handleClaim(category)}
             >
-                {isHovered && preview !== null ? (
-                    <span className="score-preview">{preview}</span>
+                {preview !== null ? (
+                    <span className={`score-preview ${isHovered ? 'preview-active' : 'preview-dim'}`}>
+                        {preview}
+                    </span>
                 ) : null}
             </td>
         )

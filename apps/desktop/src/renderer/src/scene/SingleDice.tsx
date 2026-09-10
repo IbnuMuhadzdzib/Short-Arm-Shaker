@@ -147,7 +147,7 @@ export function SingleDice({
   useEffect(() => {
     if (!isRolling || isHeld || !rigidBodyRef.current) return
     const body = rigidBodyRef.current
-    body.setTranslation({ x: startPosition[0], y: 6, z: 0 }, true)
+    body.setTranslation({ x: startPosition[0], y: 2, z: 0 }, true)
     body.setLinvel({ x: 0, y: 0, z: 0 }, true)
     body.setAngvel({ x: 0, y: 0, z: 0 }, true)
     const s = 3
