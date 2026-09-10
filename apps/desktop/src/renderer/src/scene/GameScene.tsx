@@ -1,9 +1,11 @@
 import { Canvas } from '@react-three/fiber'
 import { Physics, RigidBody } from '@react-three/rapier'
-import { OrbitControls } from '@react-three/drei'
+import { OrbitControls, useTexture } from '@react-three/drei'
+import Rex from "../assets/char/char-rex.png"
 import { DiceGroup } from './DiceGroup'
 import type { Dice } from '@yahtzee/shared'
 import * as THREE from 'three'
+import { Suspense, useMemo } from 'react'
 
 interface GameSceneProps {
   dice: Dice[]
@@ -11,9 +13,10 @@ interface GameSceneProps {
   isShaking: boolean
   onDiceClick: (diceId: string) => void
   handOffset: { x: number; progress: number }
+  opponentName: string
 }
 
-export function GameScene({ dice, isRolling, isShaking, onDiceClick, handOffset }: GameSceneProps) {
+export function GameScene({ dice, isRolling, isShaking, onDiceClick, handOffset, opponentName }: GameSceneProps) {
   return (
     <Canvas
       shadows
@@ -59,7 +62,10 @@ export function GameScene({ dice, isRolling, isShaking, onDiceClick, handOffset 
       </Physics>
 
       {/* === ROOM DIORAMA === */}
-      <ApartmentRoom />
+            <ApartmentRoom />
+      <Suspense fallback={null}>
+        <OpponentSprite name={opponentName} />
+      </Suspense>
 
       <OrbitControls
         enablePan={false}
@@ -217,5 +223,69 @@ function ApartmentRoom() {
         <meshStandardMaterial color="#ff9922" emissive="#ff6600" emissiveIntensity={0.9} />
       </mesh>
     </>
+  )
+}
+
+function buildNameTexture(name: string): THREE.CanvasTexture {
+  const canvas = document.createElement('canvas')
+  canvas.width = 512
+  canvas.height = 128
+  const ctx = canvas.getContext('2d')!
+
+  ctx.fillStyle = 'rgba(0, 0, 0, 0.55)'
+  const r = 24
+  ctx.beginPath()
+  ctx.moveTo(r, 0)
+  ctx.lineTo(canvas.width - r, 0)
+  ctx.quadraticCurveTo(canvas.width, 0, canvas.width, r)
+  ctx.lineTo(canvas.width, canvas.height - r)
+  ctx.quadraticCurveTo(canvas.width, canvas.height, canvas.width - r, canvas.height)
+  ctx.lineTo(r, canvas.height)
+  ctx.quadraticCurveTo(0, canvas.height, 0, canvas.height - r)
+  ctx.lineTo(0, r)
+  ctx.quadraticCurveTo(0, 0, r, 0)
+  ctx.closePath()
+  ctx.fill()
+
+  ctx.font = 'bold 56px sans-serif'
+  ctx.fillStyle = '#ffffff'
+  ctx.textAlign = 'center'
+  ctx.textBaseline = 'middle'
+  ctx.fillText(name, canvas.width / 2, canvas.height / 2)
+
+  const tex = new THREE.CanvasTexture(canvas)
+  tex.needsUpdate = true
+  return tex
+}
+
+function OpponentSprite({ name }: { name: string }) {
+  const rexTexture = useTexture(Rex)
+  const nameTexture = useMemo(() => buildNameTexture(name), [name])
+
+  const img = rexTexture.image as HTMLImageElement | undefined
+  const aspect = img ? img.width / img.height : 0.75
+  const height = 6.5
+  const width = height * aspect
+
+  const floorY = -2.8 // matches ApartmentRoom floor level
+  const standZ = -5.5 // just behind the tray, so the tray rim occludes his lower body
+
+  return (
+    <group position={[0, floorY, standZ]}>
+      <mesh castShadow position={[0, height / 2, 0]}>
+        <planeGeometry args={[width, height]} />
+        <meshStandardMaterial
+          map={rexTexture}
+          transparent
+          alphaTest={0.1}
+          roughness={0.85}
+          metalness={0}
+        />
+      </mesh>
+      <mesh position={[0, height + 0.3, 0.01]}>
+        <planeGeometry args={[1.6, 0.4]} />
+        <meshBasicMaterial map={nameTexture} transparent />
+      </mesh>
+    </group>
   )
 }

@@ -1,56 +1,51 @@
 @import "tailwindcss";
 
 @plugin "daisyui" {
-  themes:
+  themes: skyblue --default, fun;
+}
 
-  /* ── Blue theme (default, from #e1f2fe / #98d2eb palette) ── */
-    {
-    "skyblue": {
-      "color-scheme": "light",
-        "primary": "#98d2eb",
-        "primary-content": "#1a3a50",
-        "secondary": "#b8e4f7",
-        "secondary-content": "#1a3a50",
-        "accent": "#60b8e0",
-        "accent-content": "#ffffff",
-        "neutral": "#3a5a70",
-        "neutral-content": "#ffffff",
-        "base-100": "#e1f2fe",
-        "base-200": "#c8e8f8",
-        "base-300": "#a8d8ef",
-        "base-content": "#1a3a50",
-        "info": "#60b8e0",
-        "success": "#3ecf6a",
-        "warning": "#f0c060",
-        "error": "#ee4455"
-    }
-  }
+/* ── Blue theme (default, from #e1f2fe / #98d2eb palette) ── */
+@plugin "daisyui/theme" {
+  name: "skyblue";
+  color-scheme: light;
+  --color-primary: #98d2eb;
+  --color-primary-content: #1a3a50;
+  --color-secondary: #b8e4f7;
+  --color-secondary-content: #1a3a50;
+  --color-accent: #60b8e0;
+  --color-accent-content: #ffffff;
+  --color-neutral: #3a5a70;
+  --color-neutral-content: #ffffff;
+  --color-base-100: #e1f2fe;
+  --color-base-200: #c8e8f8;
+  --color-base-300: #a8d8ef;
+  --color-base-content: #1a3a50;
+  --color-info: #60b8e0;
+  --color-success: #3ecf6a;
+  --color-warning: #f0c060;
+  --color-error: #ee4455;
+}
 
-  ,
-  /* ── Fun color theme ── */
-    {
-    "fun": {
-      "color-scheme": "light",
-        "primary": "#1B5C38",
-        "primary-content": "#9BEF3A",
-        "secondary": "#5200C4",
-        "secondary-content": "#FFE500",
-        "accent": "#FF4400",
-        "accent-content": "#ffffff",
-        "neutral": "#1B5C38",
-        "neutral-content": "#ffffff",
-        "base-100": "#FFE500",
-        "base-200": "#ffd400",
-        "base-300": "#f5c200",
-        "base-content": "#1B3020",
-        "info": "#00CCCC",
-        "success": "#9BEF3A",
-        "warning": "#FF4400",
-        "error": "#EE1122"
-    }
-  }
-
-  ;
+/* ── Fun color theme ── */
+@plugin "daisyui/theme" {
+  name: "fun";
+  color-scheme: light;
+  --color-primary: #1b5c38;
+  --color-primary-content: #9bef3a;
+  --color-secondary: #5200c4;
+  --color-secondary-content: #ffe500;
+  --color-accent: #ff4400;
+  --color-accent-content: #ffffff;
+  --color-neutral: #1b5c38;
+  --color-neutral-content: #ffffff;
+  --color-base-100: #ffe500;
+  --color-base-200: #ffd400;
+  --color-base-300: #f5c200;
+  --color-base-content: #1b3020;
+  --color-info: #00cccc;
+  --color-success: #9bef3a;
+  --color-warning: #ff4400;
+  --color-error: #ee1122;
 }
 
 /* ── Fun Palette CSS Variables (used directly in custom components) ── */

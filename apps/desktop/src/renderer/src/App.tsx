@@ -7,6 +7,9 @@ import { WaitingRoom } from './components/WaitingRoom'
 import { ThemeSwitcher } from './components/ThemeSwitcher'
 import { useGameSounds } from './hooks/useDiceSounds'
 
+import rexOpenUrl from './assets/hands/rex/rex-open.png'
+import rexCloseUrl from './assets/hands/rex/rex-close.png'
+
 const MAX_HAND_OFFSET_X = 60
 const MAX_HAND_OFFSET_Y = 280
 const RELEASE_THRESHOLD = 0.65
@@ -127,6 +130,9 @@ function App() {
     progress: handDrag.lift / MAX_HAND_OFFSET_Y
   }
 
+    const opponent = gameState.players.find((p) => p.id !== myPlayerId)
+  const opponentName = opponent?.name ?? 'Rex'
+
   return (
     <div className="flex h-screen relative" style={{ background: 'var(--color-base-300, var(--fun-dkgreen, #1B5C38))' }}>
       {gambleResult && (
@@ -153,24 +159,26 @@ function App() {
 
       {/* ── 3D Game Scene ── */}
       <div ref={sceneContainerRef} className="flex-1 relative overflow-hidden">
-        <GameScene
+                <GameScene
           dice={gameState.dice}
           isRolling={isRolling}
           isShaking={isShaking}
           onDiceClick={toggleHold}
           handOffset={worldHandOffset}
+          opponentName={opponentName}
         />
 
-        <div
+                <img
+          src={isShaking ? rexCloseUrl : rexOpenUrl}
           onMouseDown={handleHandMouseDown}
+          draggable={false}
           style={{
             transform: `translateX(calc(-50% + ${handDrag.x}px)) translateY(${-handDrag.lift}px)`
           }}
-          className={`absolute -bottom-5 left-1/2 text-8xl select-none z-10 ${gameState.rollsLeftInTurn <= 0 || isRolling ? 'opacity-40' : 'cursor-pointer'
-            }`}
-        >
-          {isShaking ? '✊' : '🖐️'}
-        </div>
+          className={`absolute -bottom-16 left-1/2 w-56 select-none z-10 pointer-events-auto ${
+            gameState.rollsLeftInTurn <= 0 || isRolling ? 'opacity-40' : 'cursor-pointer'
+          }`}
+        />
       </div>
     </div>
   )

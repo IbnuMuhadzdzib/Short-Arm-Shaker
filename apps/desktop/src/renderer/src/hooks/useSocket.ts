@@ -10,6 +10,8 @@ export function useSocket() {
   const [isConnected, setIsConnected] = useState(false)
   const [myPlayerId, setMyPlayerId] = useState<string>('')
   const [gambleResult, setGambleResult] = useState<'good' | 'bad' | null>(null)
+    const [errorMessage, setErrorMessage] = useState<string | null>(null)
+    
 
   useEffect(() => {
     const socket: Socket<ServerToClientEvents, ClientToServerEvents> = io(SERVER_URL)
@@ -18,6 +20,10 @@ export function useSocket() {
     socket.on('connect', () => {
       setIsConnected(true)
       setMyPlayerId(socket.id ?? '')
+    })
+
+        socket.on('errorMessage', (message) => {
+      setErrorMessage(message)
     })
 
     socket.on('disconnect', () => {
@@ -55,6 +61,8 @@ export function useSocket() {
 
   const clearGambleResult = () => setGambleResult(null)
 
+    const clearError = () => setErrorMessage(null)
+
   return {
     gameState,
     isConnected,
@@ -65,5 +73,7 @@ export function useSocket() {
     claimScore,
     gambleResult,
     clearGambleResult,
+    errorMessage,
+    clearError
   }
 }
