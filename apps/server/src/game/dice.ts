@@ -1,6 +1,6 @@
 import type { Dice, DiceValue } from '@yahtzee/shared'
 
-const GAMBLE_THRESHOLD_MS = 5000
+const GAMBLE_THRESHOLD_MS = 10000
 const GAMBLE_GOOD_CHANCE = 0.1
 
 interface RollResult {
