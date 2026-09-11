@@ -6,6 +6,7 @@ import { ScorePanel } from './components/ScorePanel'
 import { WaitingRoom } from './components/WaitingRoom'
 import { ThemeSwitcher } from './components/ThemeSwitcher'
 import { useGameSounds } from './hooks/useDiceSounds'
+import { CharacterSelectScreen } from './components/CharacterSelectScreen'
 
 import { getCharacter } from './characters'
 
@@ -16,15 +17,10 @@ const GAMBLE_THRESHOLD_MS = 10000
 
 function App() {
   const {
-    gameState,
-    isConnected,
-    myPlayerId,
-    joinRoom,
-    rollDice,
-    toggleHold,
-    claimScore,
-    gambleResult,
-    clearGambleResult
+    gameState, isConnected, myPlayerId,
+    joinRoom, rollDice, toggleHold, claimScore,
+    selectCharacter, setReady,
+    gambleResult, clearGambleResult,
   } = useSocket()
   const { startShaking, stopShaking, updateTension, playGambleResult } = useGameSounds()
 
@@ -119,6 +115,22 @@ function App() {
           roomId={gameState.roomId}
           players={gameState.players}
           myPlayerId={myPlayerId}
+        />
+      </>
+    )
+  }
+
+    if (gameState.status === 'selecting') {
+    return (
+      <>
+        <ThemeSwitcher />
+        <CharacterSelectScreen
+          roomId={gameState.roomId}
+          players={gameState.players}
+          myPlayerId={myPlayerId}
+          isDebug={gameState.isDebug}
+          onSelectCharacter={selectCharacter}
+          onSetReady={setReady}
         />
       </>
     )

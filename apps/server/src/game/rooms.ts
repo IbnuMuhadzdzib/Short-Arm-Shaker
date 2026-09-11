@@ -6,7 +6,7 @@ export function getRoom(roomId: string): GameState | undefined {
   return rooms.get(roomId)
 }
 
-export function createRoom(roomId: string): GameState {
+export function createRoom(roomId: string, isDebug: boolean): GameState {
   const newState: GameState = {
     roomId,
     players: [],
@@ -17,7 +17,8 @@ export function createRoom(roomId: string): GameState {
     })),
     rollsLeftInTurn: 3,
     currentTurn: 1,
-    status: 'waiting'
+    status: 'waiting',
+    isDebug
   }
   rooms.set(roomId, newState)
   return newState

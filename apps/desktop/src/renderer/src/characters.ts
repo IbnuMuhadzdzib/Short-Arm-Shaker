@@ -15,6 +15,7 @@ export interface CharacterDef {
   sprite: string
   handOpen: string
   handClose: string
+  accentColor: string
 }
 
 export const CHARACTERS: CharacterDef[] = [
@@ -24,7 +25,8 @@ export const CHARACTERS: CharacterDef[] = [
     portrait: charRexUrl,
     sprite: charRexUrl,
     handOpen: rexOpenUrl,
-    handClose: rexCloseUrl
+    handClose: rexCloseUrl,
+    accentColor: '#3f7d3f'
   },
   {
     id: 'trixie',
@@ -32,7 +34,8 @@ export const CHARACTERS: CharacterDef[] = [
     portrait: charTrixieUrl,
     sprite: charTrixieUrl,
     handOpen: trixieOpenUrl,
-    handClose: trixieCloseUrl
+    handClose: trixieCloseUrl,
+    accentColor: '#2f6fa8'
   }
 ]
 

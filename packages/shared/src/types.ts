@@ -16,7 +16,8 @@ export type ScoreCard = Partial<Record<ScoreCategory, number>>
 export interface Player {
   id: string
   name: string
-  character: CharacterId
+  character: CharacterId | null
+  isReady: boolean
   scoreCard: ScoreCard
   isCurrentTurn: boolean
 }
@@ -27,7 +28,8 @@ export interface GameState {
   dice: Dice[]
   rollsLeftInTurn: number
   currentTurn: number
-  status: 'waiting' | 'playing' | 'finished'
+  status: 'waiting' | 'selecting' | 'playing' | 'finished'
+  isDebug: boolean
 }
 
 export interface ServerToClientEvents {
@@ -38,7 +40,9 @@ export interface ServerToClientEvents {
 }
 
 export interface ClientToServerEvents {
-  joinRoom: (roomId: string, playerName: string, character: CharacterId) => void
+  joinRoom: (roomId: string, playerName: string) => void
+  selectCharacter: (character: CharacterId) => void
+  setReady: (ready: boolean) => void
   rollDice: (holdDurationMs: number) => void
   toggleHold: (diceId: string) => void
   claimScore: (category: ScoreCategory) => void

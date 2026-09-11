@@ -14,17 +14,20 @@ const io = new Server<ClientToServerEvents, ServerToClientEvents>(httpServer, {
 })
 
 const PORT = 17510
-const TOTAL_TURNS = 13
-const IS_DEBUG = true   // dev: allow solo play without waiting for second player
+const IS_DEBUG = true
 const MIN_PLAYERS = IS_DEBUG ? 1 : 2
+const TOTAL_TURNS = 13
+
+function checkAllReady(state: ReturnType<typeof getRoom>): boolean {
+  if (!state || state.players.length < MIN_PLAYERS) return false
+  return state.players.every((p) => p.character !== null && p.isReady)
+}
 
 io.on('connection', (socket) => {
-  console.log(`Client connected: ${socket.id}`)
-
-  socket.on('joinRoom', (roomId, playerName, character) => {
+  socket.on('joinRoom', (roomId, playerName) => {
     let state = getRoom(roomId)
     if (!state) {
-      state = createRoom(roomId)
+      state = createRoom(roomId, IS_DEBUG)
     }
 
     if (state.status !== 'waiting') {
@@ -35,7 +38,8 @@ io.on('connection', (socket) => {
     const newPlayer = {
       id: socket.id,
       name: playerName,
-      character,
+      character: null,
+      isReady: false,
       scoreCard: {},
       isCurrentTurn: state.players.length === 0
     }
@@ -44,6 +48,44 @@ io.on('connection', (socket) => {
     socket.join(roomId)
 
     if (state.players.length >= MIN_PLAYERS) {
+      state.status = 'selecting'
+    }
+
+    io.to(roomId).emit('gameStateUpdate', state)
+  })
+
+  socket.on('selectCharacter', (character) => {
+    const roomId = Array.from(socket.rooms)[1]
+    if (!roomId) return
+    const state = getRoom(roomId)
+    if (!state) return
+
+    const player = state.players.find((p) => p.id === socket.id)
+    if (!player) return
+
+    player.character = character
+    player.isReady = false // ganti karakter otomatis batalin ready
+
+    io.to(roomId).emit('gameStateUpdate', state)
+  })
+
+  socket.on('setReady', (ready) => {
+    const roomId = Array.from(socket.rooms)[1]
+    if (!roomId) return
+    const state = getRoom(roomId)
+    if (!state) return
+
+    const player = state.players.find((p) => p.id === socket.id)
+    if (!player) return
+
+    if (ready && !player.character) {
+      socket.emit('errorMessage', 'Pilih karakter dulu sebelum ready!')
+      return
+    }
+
+    player.isReady = ready
+
+    if (checkAllReady(state)) {
       state.status = 'playing'
     }
 

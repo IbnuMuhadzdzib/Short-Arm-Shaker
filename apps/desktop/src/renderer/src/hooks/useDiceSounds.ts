@@ -1,12 +1,12 @@
 import { useRef, useCallback } from 'react'
 import { Howl } from 'howler'
 
-import shakeLoopUrl from '../sounds/shake-loop.mp3'
-import impactSoftUrl from '../sounds/impact-soft.mp3'
-import impactHardUrl from '../sounds/impact-hard.mp3'
-import gambleTensionUrl from '../sounds/gamble-tension.mp3'
-import gambleGoodUrl from '../sounds/gamble-good.mp3'
-import gambleBadUrl from '../sounds/gamble-bad.mp3'
+import shakeLoopUrl from '../sounds/game-scene/shake-loop.mp3'
+import impactSoftUrl from '../sounds/game-scene/impact-soft.mp3'
+import impactHardUrl from '../sounds/game-scene/impact-hard.mp3'
+import gambleTensionUrl from '../sounds/game-scene/gamble-tension.mp3'
+import gambleGoodUrl from '../sounds/game-scene/gamble-good.mp3'
+import gambleBadUrl from '../sounds/game-scene/gamble-bad.mp3'
 
 // Pre-load impact sounds to avoid cold-start latency on collision
 const impactSoftPool = Array.from(

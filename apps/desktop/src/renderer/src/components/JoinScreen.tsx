@@ -1,21 +1,20 @@
 import { useState } from 'react'
-import { CharacterSelect } from './CharacterSelect'
-import type { CharacterId } from '@yahtzee/shared'
+// import { CharacterSelect } from './CharacterSelect'
+// import type { CharacterId } from '@yahtzee/shared'
 import './JoinScreen.css'
 
 interface JoinScreenProps {
-  onJoin: (roomId: string, playerName: string, character: CharacterId) => void
+  onJoin: (roomId: string, playerName: string) => void
 }
 
 export function JoinScreen({ onJoin }: JoinScreenProps) {
   const [roomId, setRoomId] = useState('')
   const [playerName, setPlayerName] = useState('')
-  const [character, setCharacter] = useState<CharacterId>('rex')
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     if (roomId.trim() === '' || playerName.trim() === '') return
-    onJoin(roomId.trim(), playerName.trim(), character)
+    onJoin(roomId.trim(), playerName.trim())
   }
 
   return (
@@ -55,10 +54,10 @@ export function JoinScreen({ onJoin }: JoinScreenProps) {
             />
           </div>
 
-          <div className="join-field">
+          {/* <div className="join-field">
             <label className="join-label">Pilih Karakter</label>
             <CharacterSelect selected={character} onSelect={setCharacter} />
-          </div>
+          </div> */}
 
           <button type="submit" className="join-btn">
             JOIN GAME →

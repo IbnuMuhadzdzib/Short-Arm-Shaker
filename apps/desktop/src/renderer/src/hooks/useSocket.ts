@@ -43,8 +43,16 @@ export function useSocket() {
     }
   }, [])
 
-  const joinRoom = (roomId: string, playerName: string, character: CharacterId) => {
-    socketRef.current?.emit('joinRoom', roomId, playerName, character)
+  const joinRoom = (roomId: string, playerName: string) => {
+    socketRef.current?.emit('joinRoom', roomId, playerName)
+  }
+
+  const selectCharacter = (character: CharacterId) => {
+    socketRef.current?.emit('selectCharacter', character)
+  }
+
+  const setReady = (ready: boolean) => {
+    socketRef.current?.emit('setReady', ready)
   }
 
   const toggleHold = (diceId: string) => {
@@ -64,16 +72,9 @@ export function useSocket() {
     const clearError = () => setErrorMessage(null)
 
   return {
-    gameState,
-    isConnected,
-    myPlayerId,
-    joinRoom,
-    rollDice,
-    toggleHold,
-    claimScore,
-    gambleResult,
-    clearGambleResult,
-    errorMessage,
-    clearError
+    gameState, isConnected, myPlayerId,
+    joinRoom, rollDice, toggleHold, claimScore,
+    selectCharacter, setReady,
+    gambleResult, clearGambleResult, clearError, errorMessage
   }
 }

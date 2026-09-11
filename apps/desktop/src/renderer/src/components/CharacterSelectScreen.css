@@ -1,0 +1,249 @@
+/* ============================================================
+   CharacterSelectScreen — bold arcade-style select
+   ============================================================ */
+
+.cs-root {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  background: #111114;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 32px 24px;
+  gap: 28px;
+}
+
+.cs-stripe {
+  position: absolute;
+  inset: -20% -10%;
+  z-index: 0;
+}
+.stripe-a {
+  background: linear-gradient(115deg, transparent 0%, transparent 18%, var(--color-primary) 18%, var(--color-primary) 34%, transparent 34%);
+  opacity: 0.9;
+}
+.stripe-b {
+  background: linear-gradient(115deg, transparent 0%, transparent 52%, var(--color-secondary) 52%, var(--color-secondary) 66%, transparent 66%);
+  opacity: 0.5;
+}
+.stripe-c {
+  background: linear-gradient(115deg, transparent 0%, transparent 78%, var(--color-accent) 78%, var(--color-accent) 90%, transparent 90%);
+  opacity: 0.35;
+}
+
+.cs-header {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.cs-title {
+  font-size: 44px;
+  font-weight: 900;
+  color: #fff;
+  letter-spacing: 0.05em;
+  transform: skewX(-6deg);
+  text-shadow: 4px 4px 0 var(--color-primary), 8px 8px 0 rgba(0, 0, 0, 0.3);
+  margin: 0;
+}
+
+.cs-room-chip {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.15em;
+  color: #111;
+  background: #fff;
+  padding: 4px 14px;
+  border-radius: 100px;
+}
+
+.cs-grid {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  justify-content: center;
+  flex: 1;
+  align-items: center;
+}
+
+.cs-card {
+  position: relative;
+  width: 180px;
+  height: 260px;
+  border: none;
+  border-radius: 14px;
+  background: linear-gradient(160deg, var(--char-color, #444) 0%, color-mix(in oklch, var(--char-color, #444) 60%, black) 100%);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 0 0 14px;
+  overflow: hidden;
+  transform: skewX(-4deg);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  box-shadow: 6px 6px 0 rgba(0, 0, 0, 0.4);
+}
+
+.cs-card:hover:not(:disabled) {
+  transform: skewX(-4deg) translateY(-8px) scale(1.04);
+  box-shadow: 8px 14px 0 rgba(0, 0, 0, 0.45);
+}
+
+.cs-card:disabled {
+  cursor: default;
+  opacity: 0.55;
+  filter: grayscale(0.4);
+}
+
+.cs-card-locked:not(.cs-card-picked) {
+  opacity: 0.3;
+}
+
+.cs-card-picked {
+  outline: 4px solid #fff;
+  outline-offset: -4px;
+  box-shadow: 6px 6px 0 rgba(0, 0, 0, 0.4), 0 0 24px color-mix(in oklch, var(--char-color, #fff) 70%, transparent);
+}
+
+.cs-card-glow {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 20%, rgba(255, 255, 255, 0.25), transparent 60%);
+  pointer-events: none;
+}
+
+.cs-card-portrait {
+  width: 92%;
+  height: 190px;
+  object-fit: contain;
+  transform: skewX(4deg);
+  filter: drop-shadow(0 8px 6px rgba(0, 0, 0, 0.4));
+}
+
+.cs-card-plate {
+  margin-top: 6px;
+  transform: skewX(4deg);
+  font-size: 15px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.35);
+  padding: 3px 16px;
+  border-radius: 100px;
+  text-transform: uppercase;
+}
+
+.cs-tag {
+  position: absolute;
+  top: 10px;
+  transform: skewX(4deg);
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  padding: 3px 10px;
+  border-radius: 100px;
+  color: #fff;
+}
+.cs-tag-you { left: 10px; background: var(--color-success, #2ecc71); }
+.cs-tag-opp { right: 10px; background: var(--color-error, #e74c3c); }
+
+.cs-footer {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.cs-plaque {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 2px solid rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+  padding: 8px 16px 8px 8px;
+  min-width: 220px;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.cs-plaque-ready {
+  border-color: var(--color-success, #2ecc71);
+  background: color-mix(in oklch, var(--color-success, #2ecc71) 18%, transparent);
+}
+
+.cs-plaque-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.cs-plaque-avatar img { width: 100%; height: 100%; object-fit: contain; }
+.cs-plaque-empty { color: rgba(255, 255, 255, 0.3); font-weight: 800; font-size: 18px; }
+
+.cs-plaque-info { display: flex; flex-direction: column; min-width: 0; }
+.cs-plaque-label {
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  color: rgba(255, 255, 255, 0.5);
+  text-transform: uppercase;
+}
+.cs-plaque-name {
+  font-size: 14px;
+  font-weight: 800;
+  color: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 130px;
+}
+
+.cs-plaque-status {
+  margin-left: auto;
+  font-size: 20px;
+  font-weight: 900;
+  color: var(--color-success, #2ecc71);
+}
+
+.cs-ready-btn {
+  font-size: 15px;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #111;
+  background: #ffd400;
+  border: none;
+  border-radius: 100px;
+  padding: 16px 32px;
+  cursor: pointer;
+  box-shadow: 0 6px 0 rgba(0, 0, 0, 0.35);
+  transition: transform 0.1s, box-shadow 0.1s, background 0.2s;
+}
+.cs-ready-btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 8px 0 rgba(0, 0, 0, 0.35); }
+.cs-ready-btn:active:not(:disabled) { transform: translateY(4px); box-shadow: 0 2px 0 rgba(0, 0, 0, 0.35); }
+.cs-ready-btn:disabled { background: rgba(255, 255, 255, 0.15); color: rgba(255, 255, 255, 0.4); cursor: default; box-shadow: none; }
+.cs-ready-on { background: var(--color-success, #2ecc71); color: #fff; }
+
+.cs-waiting-hint {
+  position: relative;
+  z-index: 1;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.5);
+  letter-spacing: 0.06em;
+}
