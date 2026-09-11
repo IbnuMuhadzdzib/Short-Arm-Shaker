@@ -117,6 +117,9 @@ export function SingleDice({
     }
   }, [materials])
 
+    const TRAY_HALF_W = 3.7
+    const TRAY_HALF_D = 3.2
+
   useFrame(() => {
     const body = rigidBodyRef.current
     if (!body) return
@@ -126,22 +129,42 @@ export function SingleDice({
       prevLinvel.current = { x: vel.x, y: vel.y, z: vel.z }
     }
 
-    if (!isShaking || isHeld) return
+    if (isShaking && !isHeld) {
+      const t = Date.now() * 0.01
+      const jitter = new THREE.Euler(
+        Math.sin(t * 3 + startPosition[0]) * 0.4,
+        Math.cos(t * 2.5) * 0.4,
+        Math.sin(t * 4 + startPosition[0]) * 0.4
+      )
+      const q = new THREE.Quaternion().setFromEuler(jitter)
+      body.setNextKinematicRotation({ x: q.x, y: q.y, z: q.z, w: q.w })
 
-    const t = Date.now() * 0.01
-    const jitter = new THREE.Euler(
-      Math.sin(t * 3 + startPosition[0]) * 0.4,
-      Math.cos(t * 2.5) * 0.4,
-      Math.sin(t * 4 + startPosition[0]) * 0.4
-    )
-    const q = new THREE.Quaternion().setFromEuler(jitter)
-    body.setNextKinematicRotation({ x: q.x, y: q.y, z: q.z, w: q.w })
+      const progress = handOffset.progress
+      const rawX = THREE.MathUtils.lerp(0, startPosition[0], progress) + handOffset.x
+      const rawZ = THREE.MathUtils.lerp(4.5, startPosition[2], progress)
+      const clampedX = Math.max(-TRAY_HALF_W, Math.min(TRAY_HALF_W, rawX))
+      const clampedZ = Math.max(-TRAY_HALF_D, Math.min(TRAY_HALF_D, rawZ))
+      const y = THREE.MathUtils.lerp(0.5, startPosition[1], progress)
+      body.setNextKinematicTranslation({ x: clampedX, y, z: clampedZ })
+      return
+    }
 
-    const progress = handOffset.progress
-    const clusterX = THREE.MathUtils.lerp(0, startPosition[0], progress) + handOffset.x
-    const y = THREE.MathUtils.lerp(0.5, startPosition[1], progress)
-    const z = THREE.MathUtils.lerp(4.5, startPosition[2], progress)
-    body.setNextKinematicTranslation({ x: clusterX, y, z })
+    // ── Safety valve: runs every frame regardless of state ──
+    // If the die ever ends up outside the tray or falls below the floor,
+    // forcibly teleport it back rather than letting it disappear.
+    if (!isHeld) {
+      const pos = body.translation()
+      const outOfBounds =
+        Math.abs(pos.x) > TRAY_HALF_W + 1 ||
+        Math.abs(pos.z) > TRAY_HALF_D + 1 ||
+        pos.y < -3
+
+      if (outOfBounds) {
+        body.setTranslation({ x: startPosition[0], y: 2, z: 0 }, true)
+        body.setLinvel({ x: 0, y: 0, z: 0 }, true)
+        body.setAngvel({ x: 0, y: 0, z: 0 }, true)
+      }
+    }
   })
 
   useEffect(() => {

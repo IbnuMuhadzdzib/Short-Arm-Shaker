@@ -9,10 +9,10 @@
   name: "skyblue";
   color-scheme: light;
   --color-primary: #98d2eb;
-  --color-primary-content: #1a3a50;
+  --color-primary-content: #0a1f30;
   --color-secondary: #b8e4f7;
-  --color-secondary-content: #1a3a50;
-  --color-accent: #60b8e0;
+  --color-secondary-content: #0a1f30;
+  --color-accent: #1f7a9e;
   --color-accent-content: #ffffff;
   --color-neutral: #3a5a70;
   --color-neutral-content: #ffffff;
@@ -21,7 +21,7 @@
   --color-base-300: #a8d8ef;
   --color-base-content: #1a3a50;
   --color-info: #60b8e0;
-  --color-success: #3ecf6a;
+  --color-success: #0d7a3f;
   --color-warning: #f0c060;
   --color-error: #ee4455;
 }

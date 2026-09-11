@@ -1,7 +1,6 @@
 import { Canvas } from '@react-three/fiber'
 import { Physics, RigidBody } from '@react-three/rapier'
 import { OrbitControls, useTexture } from '@react-three/drei'
-import Rex from "../assets/char/char-rex.png"
 import { DiceGroup } from './DiceGroup'
 import type { Dice } from '@yahtzee/shared'
 import * as THREE from 'three'
@@ -14,9 +13,10 @@ interface GameSceneProps {
   onDiceClick: (diceId: string) => void
   handOffset: { x: number; progress: number }
   opponentName: string
+  opponentSprite: string
 }
 
-export function GameScene({ dice, isRolling, isShaking, onDiceClick, handOffset, opponentName }: GameSceneProps) {
+export function GameScene({ dice, isRolling, isShaking, onDiceClick, handOffset, opponentName, opponentSprite }: GameSceneProps) {
   return (
     <Canvas
       shadows
@@ -59,12 +59,13 @@ export function GameScene({ dice, isRolling, isShaking, onDiceClick, handOffset,
           handOffset={handOffset}
         />
         <DiceTray />
+        <SafetyNet />
       </Physics>
 
       {/* === ROOM DIORAMA === */}
             <ApartmentRoom />
       <Suspense fallback={null}>
-        <OpponentSprite name={opponentName} />
+        <OpponentSprite name={opponentName} spriteUrl={opponentSprite} />
       </Suspense>
 
       <OrbitControls
@@ -258,17 +259,17 @@ function buildNameTexture(name: string): THREE.CanvasTexture {
   return tex
 }
 
-function OpponentSprite({ name }: { name: string }) {
-  const rexTexture = useTexture(Rex)
+function OpponentSprite({ name, spriteUrl }: { name: string; spriteUrl: string }) {
+  const rexTexture = useTexture(spriteUrl)
   const nameTexture = useMemo(() => buildNameTexture(name), [name])
 
   const img = rexTexture.image as HTMLImageElement | undefined
   const aspect = img ? img.width / img.height : 0.75
-  const height = 6.5
+  const height = 10
   const width = height * aspect
 
-  const floorY = -2.8 // matches ApartmentRoom floor level
-  const standZ = -5.5 // just behind the tray, so the tray rim occludes his lower body
+  const floorY = -1.5 // table surface level, not apartment floor
+  const standZ = -4.6 // hugging the tray's back rim
 
   return (
     <group position={[0, floorY, standZ]}>
@@ -282,10 +283,20 @@ function OpponentSprite({ name }: { name: string }) {
           metalness={0}
         />
       </mesh>
-      <mesh position={[0, height + 0.3, 0.01]}>
-        <planeGeometry args={[1.6, 0.4]} />
+      <mesh position={[0, height + 0.4, 0.01]}>
+        <planeGeometry args={[1.8, 0.45]} />
         <meshBasicMaterial map={nameTexture} transparent />
       </mesh>
     </group>
+  )
+}
+
+function SafetyNet() {
+  return (
+    <RigidBody type="fixed" colliders="cuboid" position={[0, -15, 0]}>
+      <mesh visible={false}>
+        <boxGeometry args={[200, 1, 200]} />
+      </mesh>
+    </RigidBody>
   )
 }

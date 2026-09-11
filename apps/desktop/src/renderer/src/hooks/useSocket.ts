@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from 'react'
 import { io, Socket } from 'socket.io-client'
-import type { ClientToServerEvents, ServerToClientEvents, GameState, ScoreCategory } from '@yahtzee/shared'
+import type { ClientToServerEvents, ServerToClientEvents, GameState, ScoreCategory, CharacterId } from '@yahtzee/shared'
 
 const SERVER_URL = 'http://localhost:17510'
 
@@ -43,8 +43,8 @@ export function useSocket() {
     }
   }, [])
 
-  const joinRoom = (roomId: string, playerName: string) => {
-    socketRef.current?.emit('joinRoom', roomId, playerName)
+  const joinRoom = (roomId: string, playerName: string, character: CharacterId) => {
+    socketRef.current?.emit('joinRoom', roomId, playerName, character)
   }
 
   const toggleHold = (diceId: string) => {

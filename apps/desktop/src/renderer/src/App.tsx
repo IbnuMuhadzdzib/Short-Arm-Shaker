@@ -7,13 +7,12 @@ import { WaitingRoom } from './components/WaitingRoom'
 import { ThemeSwitcher } from './components/ThemeSwitcher'
 import { useGameSounds } from './hooks/useDiceSounds'
 
-import rexOpenUrl from './assets/hands/rex/rex-open.png'
-import rexCloseUrl from './assets/hands/rex/rex-close.png'
+import { getCharacter } from './characters'
 
 const MAX_HAND_OFFSET_X = 60
 const MAX_HAND_OFFSET_Y = 280
 const RELEASE_THRESHOLD = 0.65
-const GAMBLE_THRESHOLD_MS = 5000
+const GAMBLE_THRESHOLD_MS = 10000
 
 function App() {
   const {
@@ -25,7 +24,7 @@ function App() {
     toggleHold,
     claimScore,
     gambleResult,
-    clearGambleResult,
+    clearGambleResult
   } = useSocket()
   const { startShaking, stopShaking, updateTension, playGambleResult } = useGameSounds()
 
@@ -130,11 +129,18 @@ function App() {
     progress: handDrag.lift / MAX_HAND_OFFSET_Y
   }
 
-    const opponent = gameState.players.find((p) => p.id !== myPlayerId)
+  const myCharacter = getCharacter(
+    gameState.players.find((p) => p.id === myPlayerId)?.character ?? 'rex'
+  )
+  const opponent = gameState.players.find((p) => p.id !== myPlayerId)
+  const opponentCharacter = getCharacter(opponent?.character ?? 'rex')
   const opponentName = opponent?.name ?? 'Rex'
 
   return (
-    <div className="flex h-screen relative" style={{ background: 'var(--color-base-300, var(--fun-dkgreen, #1B5C38))' }}>
+    <div
+      className="flex h-screen relative"
+      style={{ background: 'var(--color-base-300, var(--fun-dkgreen, #1B5C38))' }}
+    >
       {gambleResult && (
         <div className="toast toast-top toast-center z-50">
           <div className={`alert ${gambleResult === 'good' ? 'alert-success' : 'alert-error'}`}>
@@ -159,23 +165,24 @@ function App() {
 
       {/* ── 3D Game Scene ── */}
       <div ref={sceneContainerRef} className="flex-1 relative overflow-hidden">
-                <GameScene
+        <GameScene
           dice={gameState.dice}
           isRolling={isRolling}
           isShaking={isShaking}
           onDiceClick={toggleHold}
           handOffset={worldHandOffset}
           opponentName={opponentName}
+          opponentSprite={opponentCharacter.sprite}
         />
 
-                <img
-          src={isShaking ? rexCloseUrl : rexOpenUrl}
+                        <img
+          src={isShaking ? myCharacter.handClose : myCharacter.handOpen}
           onMouseDown={handleHandMouseDown}
           draggable={false}
           style={{
             transform: `translateX(calc(-50% + ${handDrag.x}px)) translateY(${-handDrag.lift}px)`
           }}
-          className={`absolute -bottom-16 left-1/2 w-56 select-none z-10 pointer-events-auto ${
+          className={`absolute -bottom-12 left-1/2 w-52 h-64 object-contain select-none z-10 pointer-events-auto ${
             gameState.rollsLeftInTurn <= 0 || isRolling ? 'opacity-40' : 'cursor-pointer'
           }`}
         />

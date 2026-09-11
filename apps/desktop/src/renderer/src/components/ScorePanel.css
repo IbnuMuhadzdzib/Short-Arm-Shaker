@@ -267,6 +267,7 @@
   font-size: 15px;
   font-weight: 900;
   text-shadow: 0 0 10px color-mix(in oklch, var(--color-success) 60%, transparent);
+  -webkit-text-stroke: 0.4px rgba(0, 0, 0, 0.15);
 }
 
 /* ── Sum / Bonus rows ── */
